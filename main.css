@@ -1,0 +1,80 @@
+#grid {
+    position: relative;
+     margin: 50px auto;
+    color:red;
+    width: 80%;
+    padding: 0; /* Clears unordered list default */
+ }
+ 
+ .clear:after {
+    content: “”;
+    display: block;
+    clear: both;
+ }
+
+#grid .line-1 { width: 70px;}
+#grid .line-2 { width: 140px;}
+#grid .line-3 { width: 210px;}
+#grid .line-4 { width: 280px;}
+#grid .line-5 { width: 350px;}
+#grid .line-6 { width: 420px;}
+#grid .line-7 { width: 490px;}
+#grid .line-8 { width: 560px;}
+#grid .line-9 { width: 630px;}
+
+#grid .line {
+    position: relative;
+    margin:0 auto;
+    height: 60px;
+    overflow:visible;
+}
+
+ #grid li {
+    list-style-type: none;
+    position: relative;
+    float: left;
+    width: 70px;
+    margin-top:-20px;
+    padding: 0 0 80px 0;
+    -o-transform: rotate(-60deg) skewY(30deg);
+    -moz-transform: rotate(-60deg) skewY(30deg);
+    -webkit-transform: rotate(-60deg) skewY(30deg);
+    -ms-transform: rotate(-60deg) skewY(30deg);
+    transform: rotate(-60deg) skewY(30deg);
+    overflow: hidden;
+    visibility: hidden;
+ }
+
+ #grid li * {
+    visibility: visible;
+ }
+ 
+
+ #grid li .hexagon {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fdbf00;
+    -o-transform: skewY(-30deg) rotate(60deg);
+    -moz-transform: skewY(-30deg) rotate(60deg);
+    -webkit-transform: skewY(-30deg) rotate(60deg);
+    -ms-transform: skewY(-30deg) rotate(60deg);
+    transform: skewY(-30deg) rotate(60deg);
+    overflow: hidden;
+
+
+    -webkit-box-shadow: inset 10px 10px 86px -17px rgba(0,0,0,0.75);
+-moz-box-shadow: inset 10px 10px 86px -17px rgba(0,0,0,0.75);
+box-shadow: inset 10px 10px 86px -17px rgba(0,0,0,0.75);
+ 
+ }
+
+ #grid .breaker {
+     clear:both;
+ }
+
+ #grid li .hexagon:hover{
+    background:red;
+ }
