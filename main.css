@@ -1,4 +1,4 @@
-#grid {
+#hexfield {
     position: relative;
      margin: 50px auto;
     color:red;
@@ -12,24 +12,24 @@
     clear: both;
  }
 
-#grid .line-1 { width: 70px;}
-#grid .line-2 { width: 140px;}
-#grid .line-3 { width: 210px;}
-#grid .line-4 { width: 280px;}
-#grid .line-5 { width: 350px;}
-#grid .line-6 { width: 420px;}
-#grid .line-7 { width: 490px;}
-#grid .line-8 { width: 560px;}
-#grid .line-9 { width: 630px;}
+#hexfield .line-1 { width: 70px;}
+#hexfield .line-2 { width: 140px;}
+#hexfield .line-3 { width: 210px;}
+#hexfield .line-4 { width: 280px;}
+#hexfield .line-5 { width: 350px;}
+#hexfield .line-6 { width: 420px;}
+#hexfield .line-7 { width: 490px;}
+#hexfield .line-8 { width: 560px;}
+#hexfield .line-9 { width: 630px;}
 
-#grid .line {
+#hexfield .line {
     position: relative;
     margin:0 auto;
     height: 60px;
     overflow:visible;
 }
 
- #grid li {
+ #hexfield li {
     list-style-type: none;
     position: relative;
     float: left;
@@ -45,18 +45,18 @@
     visibility: hidden;
  }
 
- #grid li * {
+ #hexfield li * {
     visibility: visible;
  }
  
 
- #grid li .hexagon {
+ #hexfield li .hexagon {
     position: absolute;
     top: 0; 
     left: 0;
     width: 100%;
     height: 100%;
-    background: #fdbf00;
+    background: #C8C6AF;
     -o-transform: skewY(-30deg) rotate(60deg);
     -moz-transform: skewY(-30deg) rotate(60deg);
     -webkit-transform: skewY(-30deg) rotate(60deg);
@@ -71,10 +71,17 @@ box-shadow: inset 10px 10px 86px -17px rgba(0,0,0,0.75);
  
  }
 
- #grid .breaker {
+#hexfield li .hexagon.occupied {
+   background: #BD897E;
+}
+#hexfield li .hexagon.phantom-occupied {
+   background: #D7D0C8;
+}
+
+ #hexfield .breaker {
      clear:both;
  }
 
- #grid li .hexagon:hover{
-    background:red;
+ #hexfield li .hexagon:hover{
+    background:#F87666;
  }
