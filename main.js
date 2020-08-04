@@ -1,5 +1,9 @@
 var hexfield = [];
-var global_edgesize = 0;
+var bees_placed = 0;
+var bees_total = 60;
+var hexes_filled = 0;
+var finished = false;
+var global_edgesize = 5;
 
 class Hex {
     constructor(id, row, col) {
@@ -51,6 +55,7 @@ class Hex {
 
     occupy() {
         this.occupied = true;
+        hexes_filled++;
         $('#hex_'+this.id).addClass('occupied')
     }
 
@@ -63,8 +68,6 @@ class Hex {
 function generateHexfield(edgesize) {
     global_edgesize = edgesize;
     var longest_row = (edgesize*2) - 1;
-
-
     var cols = edgesize;
     let id = 1;
     for (let row = 0; row < longest_row; row++) {
@@ -73,7 +76,6 @@ function generateHexfield(edgesize) {
             if(!hexfield[row]) { hexfield[row] = [];}
             let hex = new Hex(id, row, col);
             hexfield[row][col] = hex;
-            
             var $li = $("<li>");
             $li.click(function(){ placeBee(hexfield[row][col]) });
             $li.mouseover(function(){ showNeighbours(hexfield[row][col]) });
@@ -81,7 +83,6 @@ function generateHexfield(edgesize) {
             var $hex = $("<div>", {id:"hex_" + hex.id, "class": "hexagon"});
             $li.append($hex);
             $row.append($li);
-
             id+=1;
         }
 
@@ -91,15 +92,32 @@ function generateHexfield(edgesize) {
         } else {
             cols-=1;
         }
-        
     }
+}
 
-    console.log(hexfield);
+function updateCounts() {
+    if (bees_placed > 0) {
+        $('#bee_counter').show();
+    }
+    $('#bees_placed').html(bees_placed);
+    $('#bees_total').html(bees_total);
+    if(hexes_filled >= bees_total) {
+        let bees_for_hive_needed = bees_placed+1;//+1 to place queen
+        let possible_hives = Math.floor(bees_total / bees_for_hive_needed);
+        $('#results').html(possible_hives+' hives can be created with this approach');
+        finished = true; 
+    }
 }
 
 function placeBee(hex) {
+    if(finished) {
+        alert('Already finished');
+        return;
+    }
     hex.occupy();
     moveAndFill();
+    bees_placed++;
+    updateCounts();
 }
 
 function moveAndFill() {
@@ -111,7 +129,6 @@ function moveAndFill() {
                     hex.occupy();
                     added++;
                 }
-                // count++;
             }
         });
     })
@@ -119,25 +136,24 @@ function moveAndFill() {
     if(added > 0) {
         moveAndFill();
     }
-    // console.log('There are '+count+' occupied hexes');
 }
 
 function showNeighbours(hex) {
-    let neighbours = hex.neighbours();
-    neighbours.forEach(neighbour => {
-        neighbour.phantomOccupy();
-    })
+    if(!finished){
+        let neighbours = hex.neighbours(false);
+        neighbours.forEach(neighbour => {
+            if(!neighbour.occupied){
+                neighbour.phantomOccupy();
+            }
+        })
+    }
 }
-
 
 function clearPhantoms() {
     $(".hexagon.phantom-occupied").removeClass("phantom-occupied");
 }
 
-
-
-
-
 $( document ).ready(function() {
-    generateHexfield(5);
+    generateHexfield(global_edgesize);
+    updateCounts();
 });
