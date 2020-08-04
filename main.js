@@ -11,12 +11,17 @@ class Hex {
         this.row = row;
         this.col = col;
         this.occupied = false;
+        this.phantom_occupied = false;
     }
 
-    hasAtleast3OccupiedNeighbours() {
+    hasAtleast3TrueNeighbours(field, property) {
         let occupied_count = 0;
-        this.neighbours().forEach(neighbour => {
-            if(neighbour.occupied) {
+        this.neighbours(field).forEach(neighbour => {
+            if (property == 'both') {
+                if (neighbour['occupied'] || neighbour['phantom_occupied']) {
+                    occupied_count++;
+                }
+            } else if(neighbour[property]) {
                 occupied_count++;
             }
         });
@@ -24,9 +29,9 @@ class Hex {
         return occupied_count >= 3;
     }
 
-    neighbours() {
+    neighbours(field) {
         let neighbours = [];
-        hexfield.forEach(row => {
+        field.forEach(row => {
             row.forEach(hex => {
                 let xdelta = Math.abs(hex.row - this.row);
                 let ydelta = Math.abs(hex.col - this.col);
@@ -60,6 +65,7 @@ class Hex {
     }
 
     phantomOccupy() {
+        this.phantom_occupied = true;
         $('#hex_'+this.id).addClass('phantom-occupied')
     }
 }
@@ -124,8 +130,9 @@ function moveAndFill() {
     let added = 0;
     hexfield.forEach(row => {
         row.forEach(hex => {
+            hex.phantom_occupied = false;
             if(!hex.occupied) {
-                if(hex.hasAtleast3OccupiedNeighbours()) {
+                if(hex.hasAtleast3TrueNeighbours(hexfield, 'occupied')) {
                     hex.occupy();
                     added++;
                 }
@@ -138,14 +145,51 @@ function moveAndFill() {
     }
 }
 
-function showNeighbours(hex) {
-    if(!finished){
-        let neighbours = hex.neighbours(false);
-        neighbours.forEach(neighbour => {
-            if(!neighbour.occupied){
-                neighbour.phantomOccupy();
+function fakeMoveAndFill(field, notaddedtimes) {
+    console.log('fakeMoveAndFill',notaddedtimes);
+    let added = false;
+    field.forEach(row => {
+        row.forEach(hex => {
+            if(!hex.occupied){
+                if(hex.hasAtleast3TrueNeighbours(field, 'both')) {
+                    hex.phantomOccupy();
+                    if(!hex.phantom_occupied) {
+                        added = true;
+                    }
+                }
             }
+        });
+    })
+
+    if(!added) {
+        notaddedtimes++;
+    }
+
+    if(notaddedtimes > 3) {
+        console.log('recursive mess');
+        return field;
+    }
+
+    field = fakeMoveAndFill(field, notaddedtimes);
+
+
+    return field;
+}
+
+
+function showNeighbours(hex) {
+    if(!finished && !hex.occupied){
+        let phantom_hexfield = $.extend(true,[],hexfield);
+        phantom_hexfield.forEach(row => {
+            row.forEach(phantom_hex => {
+                phantom_hex.phantom_occupied = false;
+                if (phantom_hex.id == hex.id) {
+                    phantom_hex.phantomOccupy();
+                }
+            });
         })
+
+        phantom_hexfield = fakeMoveAndFill(phantom_hexfield, 0);
     }
 }
 
