@@ -146,7 +146,6 @@ function moveAndFill() {
 }
 
 function fakeMoveAndFill(field, notaddedtimes) {
-    console.log('fakeMoveAndFill',notaddedtimes);
     let added = false;
     field.forEach(row => {
         row.forEach(hex => {
@@ -166,7 +165,6 @@ function fakeMoveAndFill(field, notaddedtimes) {
     }
 
     if(notaddedtimes > 3) {
-        console.log('recursive mess');
         return field;
     }
 
