@@ -164,7 +164,7 @@ function fakeMoveAndFill(field, notaddedtimes) {
         notaddedtimes++;
     }
 
-    if(notaddedtimes > 3) {
+    if(notaddedtimes > 4) {
         return field;
     }
 
