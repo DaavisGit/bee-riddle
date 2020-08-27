@@ -10,8 +10,31 @@ class Hex {
         this.id = id;
         this.row = row;
         this.col = col;
+        this.is_occupied = false;
+
     }
 
+    placeBee() {
+        this.is_occupied = true;
+    }
+
+    needsToFill() {
+        let count = 0;
+        for(let row in hexfield) {
+            for(let col in hexfield) {
+                let littleHex = hexfield[row][col];
+                if(littleHex && littleHex.is_occupied) {
+                    if((this.col === littleHex.col && Math.abs(this.row-littleHex.row)) || (this.row === littleHex.row && Math.abs(this.col-littleHex.col))) {
+                        count++;
+                        if(count === 2) {
+                            return th;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
 
 
@@ -27,7 +50,7 @@ function generateHexfield(edgesize) {
             let hex = new Hex(id, row, col);
             hexfield[row][col] = hex;
             var $li = $("<li>");
-            $li.click(function(){ });
+            $li.click(function(){ hex.placeBee(); updateField(hex.id); autoFill();});
             $li.mouseover(function(){ });
             $li.mouseleave(function(){ });
             var $hex = $("<div>", {id:"hex_" + hex.id, "class": "hexagon"});
@@ -44,6 +67,24 @@ function generateHexfield(edgesize) {
         }
     }
 }
+
+function autoFill() {
+    for(let row in hexfield) {
+        for(let col in hexfield) {
+            let littleHex = hexfield[row][col];
+            if (littleHex && littleHex.needsToFill){
+                littleHex.placeBee(); updateField(littleHex.id);
+            }
+        }
+    }
+}
+
+function updateField(hex_id) {
+    $('#hex_'+hex_id).addClass('occupied');
+    console.log(hex_id);
+}
+
+
 
 
 
