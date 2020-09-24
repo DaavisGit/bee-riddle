@@ -14,26 +14,91 @@ class Hex {
 
     }
 
-    placeBee() {
-        this.is_occupied = true;
+    fillCell() {
+        console.log(this.row,this.col);
+        if( this.is_occupied) {
+            return false;
+        } else {
+            this.is_occupied = true;
+            updateField(this.id);
+            this.iterateNeighbouringCells();
+        }
     }
 
-    needsToFill() {
-        let count = 0;
-        for(let row in hexfield) {
-            for(let col in hexfield) {
-                let littleHex = hexfield[row][col];
-                if(littleHex && littleHex.is_occupied) {
-                    if((this.col === littleHex.col && Math.abs(this.row-littleHex.row)) || (this.row === littleHex.row && Math.abs(this.col-littleHex.col))) {
-                        count++;
-                        if(count === 2) {
-                            return th;
-                        }
-                    }
-                }
+    checkNeighbouringCells() {
+        let filledNeighboursCount = 0;
+
+        if(this.row <=5) {
+            var neigbours = [
+                [-1,-1],
+                [-1,0],
+                [0,1],
+                [1,1],
+                [1,0],
+                [0,-1],
+             ];
+        } else {
+            var neigbours = [
+                [-1,0],
+                [-1,1],
+                [0,1],
+                [1,0],
+                [1,-1],
+                [0,-1],
+             ];
+        }
+
+        for(let diff of neigbours) {
+            if(!hexfield[this.row-diff[0]]) {
+                continue;
+            }
+            let littleHex = hexfield[this.row-diff[0]][this.col-diff[1]];
+            if(!littleHex) {
+                continue;
+            }
+            if(littleHex.is_occupied) {
+                filledNeighboursCount++;
             }
         }
-        return false;
+        if(filledNeighboursCount >= 3) {
+            this.fillCell();
+        }
+    }
+
+    iterateNeighbouringCells() {
+
+        if(this.row <=5) {
+            var neigbours = [
+                [-1,-1],
+                [-1,0],
+                [0,1],
+                [1,1],
+                [1,0],
+                [0,-1],
+             ];
+        } else {
+            var neigbours = [
+                [-1,0],
+                [-1,1],
+                [0,1],
+                [1,0],
+                [1,-1],
+                [0,-1],
+             ];
+        }
+
+
+
+        for(let diff of neigbours) {
+            if(!hexfield[this.row-diff[0]]) {
+                continue;
+            }
+            let littleHex = hexfield[this.row-diff[0]][this.col-diff[1]];
+            if(littleHex && littleHex.is_occupied === false) {
+                littleHex.checkNeighbouringCells();
+            }
+        }
+
     }
 }
 
@@ -50,7 +115,7 @@ function generateHexfield(edgesize) {
             let hex = new Hex(id, row, col);
             hexfield[row][col] = hex;
             var $li = $("<li>");
-            $li.click(function(){ hex.placeBee(); updateField(hex.id); autoFill();});
+            $li.click(function(){ hex.fillCell();});
             $li.mouseover(function(){ });
             $li.mouseleave(function(){ });
             var $hex = $("<div>", {id:"hex_" + hex.id, "class": "hexagon"});
@@ -68,20 +133,8 @@ function generateHexfield(edgesize) {
     }
 }
 
-function autoFill() {
-    for(let row in hexfield) {
-        for(let col in hexfield) {
-            let littleHex = hexfield[row][col];
-            if (littleHex && littleHex.needsToFill){
-                littleHex.placeBee(); updateField(littleHex.id);
-            }
-        }
-    }
-}
-
 function updateField(hex_id) {
     $('#hex_'+hex_id).addClass('occupied');
-    console.log(hex_id);
 }
 
 
