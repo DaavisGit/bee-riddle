@@ -24,6 +24,6 @@ Here's the riddle itself: https://www.youtube.com/watch?v=rLL-y2WLE14
 </details>
 
 <details>
-<summary>Solution</summary>
-![Solution](solution.png "Solution")
+  <summary>Solution</summary>
+  ![solution](https://github.com/DaavisGit/bee-riddle/assets/11573591/791fc5b4-ad03-429e-bf36-3bfd38ccde04)
 </details>
